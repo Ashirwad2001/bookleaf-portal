@@ -1,0 +1,132 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  AUTHOR
+  ADMIN
+}
+
+enum TicketCategory {
+  ROYALTY_PAYMENTS
+  ISBN_METADATA
+  PRINTING_QUALITY
+  DISTRIBUTION_AVAILABILITY
+  BOOK_STATUS_PRODUCTION
+  GENERAL_INQUIRY
+}
+
+enum Priority {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+model User {
+  id              String         @id
+  name            String
+  email           String         @unique
+  passwordHash    String
+  role            Role           @default(AUTHOR)
+  phone           String?
+  city            String?
+  joinedDate      DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  books           Book[]
+  tickets         Ticket[]       @relation("AuthorTickets")
+  assignedTickets Ticket[]       @relation("AdminAssignedTickets")
+  messages        TicketMessage[]
+  internalNotes   InternalNote[]
+}
+
+model Book {
+  id                    String    @id
+  authorId              String
+  title                 String
+  isbn                  String?
+  genre                 String?
+  publicationDate       DateTime?
+  status                String
+  mrp                   Float?
+  authorRoyaltyPerCopy  Float?
+  totalCopiesSold       Int       @default(0)
+  totalRoyaltyEarned    Float     @default(0)
+  royaltyPaid           Float     @default(0)
+  royaltyPending        Float     @default(0)
+  lastRoyaltyPayoutDate DateTime?
+  printPartner          String?
+  availableOnJson       String    @default("[]") // JSON string of platforms
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  author                User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  tickets               Ticket[]
+}
+
+model Ticket {
+  id                  String         @id @default(uuid())
+  ticketNumber        String         @unique
+  authorId            String
+  bookId              String?
+  subject             String
+  description         String
+  category            TicketCategory @default(GENERAL_INQUIRY)
+  categoryOverridden  Boolean        @default(false)
+  priority            Priority       @default(MEDIUM)
+  priorityOverridden  Boolean        @default(false)
+  priorityReasoning   String?
+  status              TicketStatus   @default(OPEN)
+  assignedToId        String?
+  attachmentName      String?
+  attachmentUrl       String?
+  aiDraft             String?
+  aiDraftGeneratedAt  DateTime?
+  aiModelUsed         String?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  author              User           @relation("AuthorTickets", fields: [authorId], references: [id], onDelete: Cascade)
+  assignedTo          User?          @relation("AdminAssignedTickets", fields: [assignedToId], references: [id], onDelete: SetNull)
+  book                Book?          @relation(fields: [bookId], references: [id], onDelete: SetNull)
+  messages            TicketMessage[]
+  internalNotes       InternalNote[]
+}
+
+model TicketMessage {
+  id           String       @id @default(uuid())
+  ticketId     String
+  senderId     String
+  senderRole   Role
+  content      String
+  isAiAssisted Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+
+  ticket       Ticket       @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  sender       User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model InternalNote {
+  id        String       @id @default(uuid())
+  ticketId  String
+  adminId   String
+  content   String
+  createdAt DateTime     @default(now())
+
+  ticket    Ticket       @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  admin     User         @relation(fields: [adminId], references: [id], onDelete: Cascade)
+}
