@@ -540,39 +540,75 @@ export default function AdminPortal() {
       <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full flex flex-col gap-6">
         {/* Top Metric Cards */}
         {stats && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-            <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-xs">
-              <span className="text-xs font-medium text-slate-500 block mb-1">Active Tickets</span>
-              <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-bold text-slate-900">{stats.activeTickets}</span>
-                <span className="text-xs text-amber-600 font-semibold">{stats.openTickets} Open</span>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition-all relative overflow-hidden group">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-indigo-600" />
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Active Queue</span>
+                <div className="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                  <Clock className="w-4 h-4" />
+                </div>
               </div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-black text-slate-900 tracking-tight">{stats.activeTickets}</span>
+                <span className="text-xs text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded-full">
+                  {stats.openTickets} Open
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-2">Unresolved tickets across all categories</p>
             </div>
 
-            <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-xs">
-              <span className="text-xs font-medium text-slate-500 block mb-1">Urgent & High Priority</span>
+            <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition-all relative overflow-hidden group">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 to-rose-600" />
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Urgent & High</span>
+                <div className="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
+                  <AlertTriangle className="w-4 h-4 animate-pulse" />
+                </div>
+              </div>
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-bold text-rose-600">
+                <span className="text-3xl font-black text-rose-600 tracking-tight">
                   {stats.criticalTickets + stats.highPriorityTickets}
                 </span>
-                <span className="text-xs text-rose-500 font-medium">({stats.criticalTickets} Critical)</span>
+                <span className="text-xs text-rose-700 font-bold bg-rose-50 px-2 py-0.5 rounded-full">
+                  {stats.criticalTickets} Critical
+                </span>
               </div>
+              <p className="text-[11px] text-slate-400 mt-2">Defect claims, delayed payouts & ISBN audits</p>
             </div>
 
-            <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-xs">
-              <span className="text-xs font-medium text-slate-500 block mb-1">In Progress</span>
-              <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-bold text-sky-600">{stats.inProgressTickets}</span>
-                <span className="text-xs text-slate-400">Assigned</span>
+            <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition-all relative overflow-hidden group">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-400 to-sky-500" />
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">In Progress</span>
+                <div className="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
+                  <UserCheck className="w-4 h-4" />
+                </div>
               </div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-black text-sky-600 tracking-tight">{stats.inProgressTickets}</span>
+                <span className="text-xs text-sky-700 font-bold bg-sky-50 px-2 py-0.5 rounded-full">
+                  Assigned
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-2">Being handled by operations team</p>
             </div>
 
-            <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-xs">
-              <span className="text-xs font-medium text-slate-500 block mb-1">Total Resolved</span>
-              <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-bold text-emerald-700">{stats.resolvedTickets}</span>
-                <span className="text-xs text-slate-400">Completed</span>
+            <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition-all relative overflow-hidden group">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 to-emerald-500" />
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Resolved</span>
+                <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                  <CheckCircle className="w-4 h-4" />
+                </div>
               </div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-black text-emerald-700 tracking-tight">{stats.resolvedTickets}</span>
+                <span className="text-xs text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">
+                  Completed
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-2">Closed within 48-hour SLA</p>
             </div>
           </div>
         )}
@@ -682,19 +718,25 @@ export default function AdminPortal() {
                     <div
                       key={t.id}
                       onClick={() => setSelectedTicketId(t.id)}
-                      className={`p-3.5 hover:bg-slate-50 transition-colors cursor-pointer border-l-4 ${
+                      className={`p-4 hover:bg-slate-50 transition-all cursor-pointer border-l-4 relative group ${
                         isSelected
-                          ? 'bg-indigo-50/60 border-l-indigo-600'
+                          ? 'bg-indigo-50/70 border-l-indigo-600 shadow-xs'
                           : isCritical
-                          ? 'border-l-rose-500 bg-rose-50/30'
+                          ? 'border-l-rose-500 bg-rose-50/20 hover:bg-rose-50/40'
                           : isHigh
-                          ? 'border-l-orange-400'
+                          ? 'border-l-amber-500 hover:bg-amber-50/20'
                           : 'border-l-transparent'
                       }`}
                     >
-                      <div className="flex items-center justify-between gap-2 mb-1">
+                      <div className="flex items-center justify-between gap-2 mb-1.5">
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="font-mono text-[11px] font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded">
+                          {isCritical && (
+                            <span className="relative flex h-2 w-2 mr-0.5">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+                            </span>
+                          )}
+                          <span className="font-mono text-[11px] font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
                             {t.ticketNumber}
                           </span>
                           <span
@@ -713,7 +755,7 @@ export default function AdminPortal() {
                           </span>
                         </div>
 
-                        <span className="text-[10px] text-slate-400">
+                        <span className="text-[10px] text-slate-400 font-medium">
                           {new Date(t.createdAt).toLocaleDateString([], {
                             month: 'short',
                             day: 'numeric',
@@ -721,16 +763,29 @@ export default function AdminPortal() {
                         </span>
                       </div>
 
-                      <h4 className="text-xs font-semibold text-slate-900 line-clamp-1 mb-1">
+                      <h4 className="text-xs font-bold text-slate-900 line-clamp-1 mb-1.5 group-hover:text-indigo-600 transition-colors">
                         {t.subject}
                       </h4>
 
                       <div className="flex items-center justify-between text-[11px] text-slate-500">
-                        <span className="font-medium text-slate-700">{t.author.name}</span>
-                        <span className="text-[10px] text-indigo-600 bg-indigo-50 px-1.5 py-0.2 rounded">
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-4 h-4 rounded-full bg-slate-200 text-slate-700 text-[9px] font-bold flex items-center justify-center">
+                            {t.author.name.charAt(0)}
+                          </div>
+                          <span className="font-medium text-slate-700">{t.author.name}</span>
+                        </div>
+
+                        <span className="text-[10px] text-indigo-700 bg-indigo-50 border border-indigo-100/80 px-2 py-0.5 rounded-full font-medium">
                           {formatCategoryName(t.category)}
                         </span>
                       </div>
+
+                      {t.book && (
+                        <div className="mt-2 text-[10px] text-slate-400 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+                          <span className="truncate">Book: {t.book.title}</span>
+                        </div>
+                      )}
                     </div>
                   );
                 })
@@ -807,61 +862,87 @@ export default function AdminPortal() {
                 </div>
 
                 {/* AI Assessment & Overrides Card */}
-                <div className="bg-gradient-to-r from-indigo-50/70 via-sky-50/50 to-slate-50 border border-indigo-100 rounded-xl p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2 text-xs font-bold text-indigo-900">
-                      <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-                      AI Analysis & Classification (Gemini Engine)
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-5 border border-indigo-500/30 shadow-lg">
+                  {/* Ambient Glow */}
+                  <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-500/15 rounded-full blur-2xl pointer-events-none" />
+
+                  <div className="relative z-10 space-y-4">
+                    {/* Header */}
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-300 flex items-center justify-center border border-indigo-400/30">
+                          <Sparkles className="w-3.5 h-3.5 text-indigo-300 animate-pulse" />
+                        </div>
+                        <span className="text-xs font-bold tracking-wide uppercase text-indigo-200">
+                          AI Copilot • Policy Classification Engine
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        {selectedTicket.aiModelUsed && (
+                          <span className="text-[10px] font-mono text-indigo-300 bg-indigo-500/20 px-2.5 py-0.5 rounded-full border border-indigo-400/30">
+                            {selectedTicket.aiModelUsed}
+                          </span>
+                        )}
+                        <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-500/20 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
+                          Policy Grounded
+                        </span>
+                      </div>
                     </div>
-                    {selectedTicket.aiModelUsed && (
-                      <span className="text-[10px] font-mono text-indigo-600 bg-indigo-100/60 px-2 py-0.5 rounded">
-                        Model: {selectedTicket.aiModelUsed}
-                      </span>
+
+                    {/* AI Urgency Reasoning */}
+                    {selectedTicket.priorityReasoning && (
+                      <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10 text-xs">
+                        <span className="text-[10px] font-bold text-indigo-300 uppercase tracking-wider block mb-1">
+                          AI Urgency & Policy Analysis
+                        </span>
+                        <p className="text-slate-200 text-xs leading-relaxed font-sans">
+                          {selectedTicket.priorityReasoning}
+                        </p>
+                      </div>
                     )}
-                  </div>
 
-                  {selectedTicket.priorityReasoning && (
-                    <p className="text-xs text-slate-700 mb-3 bg-white/70 p-2.5 rounded-lg border border-indigo-100/50">
-                      <strong>AI Urgency Reasoning:</strong> {selectedTicket.priorityReasoning}
-                    </p>
-                  )}
+                    {/* Overrides row */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-1">
+                      <div className="bg-slate-800/80 rounded-xl p-2.5 border border-slate-700/80 flex items-center gap-2">
+                        <span className="text-slate-400 text-[11px] font-medium shrink-0">Category:</span>
+                        <select
+                          value={selectedTicket.category}
+                          onChange={(e) => handleTicketUpdate({ category: e.target.value })}
+                          className="bg-transparent text-white font-semibold text-xs focus:outline-none flex-1 cursor-pointer"
+                        >
+                          <option value="ROYALTY_PAYMENTS" className="bg-slate-900 text-white">Royalty & Payments</option>
+                          <option value="ISBN_METADATA" className="bg-slate-900 text-white">ISBN & Metadata</option>
+                          <option value="PRINTING_QUALITY" className="bg-slate-900 text-white">Printing & Quality</option>
+                          <option value="DISTRIBUTION_AVAILABILITY" className="bg-slate-900 text-white">Distribution</option>
+                          <option value="BOOK_STATUS_PRODUCTION" className="bg-slate-900 text-white">Production Updates</option>
+                          <option value="GENERAL_INQUIRY" className="bg-slate-900 text-white">General Inquiry</option>
+                        </select>
+                        {selectedTicket.categoryOverridden && (
+                          <span className="text-[9px] font-bold text-amber-400 bg-amber-500/20 px-1.5 py-0.5 rounded border border-amber-500/30">
+                            Custom
+                          </span>
+                        )}
+                      </div>
 
-                  {/* Overrides row */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                    <div className="flex items-center gap-2 bg-white p-2 rounded-lg border border-slate-200">
-                      <span className="text-slate-500 font-medium">Category:</span>
-                      <select
-                        value={selectedTicket.category}
-                        onChange={(e) => handleTicketUpdate({ category: e.target.value })}
-                        className="font-semibold text-slate-800 bg-transparent focus:outline-none flex-1 text-xs"
-                      >
-                        <option value="ROYALTY_PAYMENTS">Royalty & Payments</option>
-                        <option value="ISBN_METADATA">ISBN & Metadata</option>
-                        <option value="PRINTING_QUALITY">Printing & Quality</option>
-                        <option value="DISTRIBUTION_AVAILABILITY">Distribution</option>
-                        <option value="BOOK_STATUS_PRODUCTION">Production Updates</option>
-                        <option value="GENERAL_INQUIRY">General Inquiry</option>
-                      </select>
-                      {selectedTicket.categoryOverridden && (
-                        <span className="text-[10px] text-amber-600 bg-amber-50 px-1 rounded">Overridden</span>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-2 bg-white p-2 rounded-lg border border-slate-200">
-                      <span className="text-slate-500 font-medium">Priority:</span>
-                      <select
-                        value={selectedTicket.priority}
-                        onChange={(e) => handleTicketUpdate({ priority: e.target.value })}
-                        className="font-semibold text-slate-800 bg-transparent focus:outline-none flex-1 text-xs"
-                      >
-                        <option value="CRITICAL">Critical</option>
-                        <option value="HIGH">High</option>
-                        <option value="MEDIUM">Medium</option>
-                        <option value="LOW">Low</option>
-                      </select>
-                      {selectedTicket.priorityOverridden && (
-                        <span className="text-[10px] text-amber-600 bg-amber-50 px-1 rounded">Overridden</span>
-                      )}
+                      <div className="bg-slate-800/80 rounded-xl p-2.5 border border-slate-700/80 flex items-center gap-2">
+                        <span className="text-slate-400 text-[11px] font-medium shrink-0">Priority:</span>
+                        <select
+                          value={selectedTicket.priority}
+                          onChange={(e) => handleTicketUpdate({ priority: e.target.value })}
+                          className="bg-transparent text-white font-semibold text-xs focus:outline-none flex-1 cursor-pointer"
+                        >
+                          <option value="CRITICAL" className="bg-slate-900 text-white">Critical</option>
+                          <option value="HIGH" className="bg-slate-900 text-white">High</option>
+                          <option value="MEDIUM" className="bg-slate-900 text-white">Medium</option>
+                          <option value="LOW" className="bg-slate-900 text-white">Low</option>
+                        </select>
+                        {selectedTicket.priorityOverridden && (
+                          <span className="text-[9px] font-bold text-amber-400 bg-amber-500/20 px-1.5 py-0.5 rounded border border-amber-500/30">
+                            Custom
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -936,33 +1017,89 @@ export default function AdminPortal() {
                 </div>
 
                 {/* AI Draft Response & Admin Composer */}
-                <div className="border border-indigo-200 rounded-xl p-4 bg-indigo-50/20">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-900">
-                      <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-                      BookLeaf AI Drafted Response (Editable before sending)
+                <div className="border border-indigo-200/80 rounded-2xl p-5 bg-gradient-to-b from-indigo-50/40 to-white shadow-xs">
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-950">
+                      <Sparkles className="w-4 h-4 text-indigo-600" />
+                      BookLeaf AI Drafted Response (Editable before dispatch)
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={handleRegenerateDraft}
-                      disabled={regeneratingDraft}
-                      className="text-xs text-indigo-600 hover:text-indigo-800 flex items-center gap-1 font-medium disabled:opacity-50 cursor-pointer"
-                    >
-                      <RefreshCw className={`w-3 h-3 ${regeneratingDraft ? 'animate-spin' : ''}`} />
-                      Regenerate Draft
-                    </button>
+                    <div className="flex items-center gap-2">
+                      {selectedTicket.aiDraft && replyContent !== selectedTicket.aiDraft && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setReplyContent(selectedTicket.aiDraft || '');
+                            setIsAiAssisted(true);
+                            showToast('Restored original AI draft');
+                          }}
+                          className="text-xs text-indigo-700 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1 rounded-lg font-medium transition-colors cursor-pointer border border-indigo-200"
+                        >
+                          Restore AI Draft
+                        </button>
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={handleRegenerateDraft}
+                        disabled={regeneratingDraft}
+                        className="text-xs text-indigo-600 hover:text-indigo-800 flex items-center gap-1 font-semibold disabled:opacity-50 cursor-pointer bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-xs"
+                      >
+                        <RefreshCw className={`w-3 h-3 ${regeneratingDraft ? 'animate-spin' : ''}`} />
+                        Regenerate
+                      </button>
+                    </div>
                   </div>
 
-                  <p className="text-[11px] text-slate-500 mb-2">
+                  <p className="text-[11px] text-slate-500 mb-3">
                     Review and customize this response. Once sent, the author will immediately see it in real-time via Server-Sent Events.
                   </p>
+
+                  {/* 1-Click Policy Presets */}
+                  <div className="flex flex-wrap gap-1.5 mb-3">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider self-center mr-1">
+                      Quick Inserts:
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setReplyContent((prev) =>
+                          `${prev ? prev + '\n\n' : ''}BookLeaf Policy Note: Author royalties are disbursed on the 15th of each month following a 45-day sales verification cycle. If your pending balance is under ₹1,000, it safely rolls over to the next quarter.`
+                        );
+                      }}
+                      className="text-[11px] font-medium px-2.5 py-1 rounded-lg bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 transition-colors cursor-pointer shadow-2xs"
+                    >
+                      💰 Royalty Cycle (45-Day)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setReplyContent((prev) =>
+                          `${prev ? prev + '\n\n' : ''}BookLeaf Quality Guarantee: We have initiated a 100% free reprint batch with our printing partner. A replacement order tracking number will be generated and dispatched within 3 business days.`
+                        );
+                      }}
+                      className="text-[11px] font-medium px-2.5 py-1 rounded-lg bg-white hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-200 transition-colors cursor-pointer shadow-2xs"
+                    >
+                      📦 Free Reprint Approval
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setReplyContent((prev) =>
+                          `${prev ? prev + '\n\n' : ''}Distribution Resync: We have triggered an automated ONIX feed refresh with Amazon India and Flipkart. Availability will reflect within 24 to 48 hours.`
+                        );
+                      }}
+                      className="text-[11px] font-medium px-2.5 py-1 rounded-lg bg-white hover:bg-sky-50 text-slate-700 hover:text-sky-700 border border-slate-200 transition-colors cursor-pointer shadow-2xs"
+                    >
+                      🛒 Distributor Feed Resync
+                    </button>
+                  </div>
 
                   <textarea
                     rows={7}
                     value={replyContent}
                     onChange={(e) => setReplyContent(e.target.value)}
-                    className="w-full bg-white border border-slate-300 rounded-xl p-3 text-xs text-slate-900 font-sans focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-3"
+                    className="w-full bg-white border border-slate-300 rounded-xl p-3.5 text-xs text-slate-900 font-sans focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 mb-3 shadow-inner leading-relaxed"
                     placeholder="Write or refine the response to the author..."
                   />
 
@@ -973,7 +1110,7 @@ export default function AdminPortal() {
                           type="checkbox"
                           checked={isAiAssisted}
                           onChange={(e) => setIsAiAssisted(e.target.checked)}
-                          className="rounded text-indigo-600"
+                          className="rounded text-indigo-600 focus:ring-indigo-500"
                         />
                         <span>Flag as Knowledge Base assisted</span>
                       </label>
@@ -981,7 +1118,7 @@ export default function AdminPortal() {
                       <select
                         value={statusAfterReply}
                         onChange={(e) => setStatusAfterReply(e.target.value)}
-                        className="text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-1 text-slate-700"
+                        className="text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-1 text-slate-700 focus:outline-none"
                       >
                         <option value="IN_PROGRESS">Keep: In Progress</option>
                         <option value="RESOLVED">Mark as: Resolved</option>
@@ -993,7 +1130,7 @@ export default function AdminPortal() {
                       type="button"
                       onClick={handleSendReply}
                       disabled={sendingReply || !replyContent.trim()}
-                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
+                      className="px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-xl text-xs font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-2 disabled:opacity-50 cursor-pointer"
                     >
                       {sendingReply ? (
                         <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />

@@ -513,37 +513,108 @@ export default function AuthorDashboard() {
             {/* Aggregate Royalty Cards */}
             {booksSummary && (
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-xs">
-                  <span className="text-xs font-medium text-slate-500 block mb-1">Total Copies Sold</span>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-2xl font-bold text-slate-900">{booksSummary.totalCopiesSold.toLocaleString()}</span>
-                    <span className="text-xs text-emerald-600 font-semibold">Across platforms</span>
+                <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition-all relative overflow-hidden group">
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-400 to-indigo-500" />
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Copies Sold</span>
+                    <div className="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
+                      <BookOpen className="w-4 h-4" />
+                    </div>
                   </div>
-                </div>
-
-                <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-xs">
-                  <span className="text-xs font-medium text-slate-500 block mb-1">Total Royalty Earned</span>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-2xl font-bold text-slate-900">₹{booksSummary.totalRoyaltyEarned.toLocaleString()}</span>
-                    <span className="text-xs text-indigo-600 font-semibold">80/20 share</span>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-xs">
-                  <span className="text-xs font-medium text-slate-500 block mb-1">Total Royalty Paid</span>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-2xl font-bold text-emerald-700">₹{booksSummary.totalRoyaltyPaid.toLocaleString()}</span>
-                    <span className="text-xs text-slate-400">Disbursed</span>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-xs">
-                  <span className="text-xs font-medium text-slate-500 block mb-1">Current Pending Payout</span>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-2xl font-bold text-amber-600">₹{booksSummary.totalRoyaltyPending.toLocaleString()}</span>
-                    <span className="text-xs text-slate-500">
-                      {booksSummary.totalRoyaltyPending >= 1000 ? 'Eligible for cycle' : 'Rolls over (< ₹1,000)'}
+                    <span className="text-3xl font-black text-slate-900 tracking-tight">
+                      {booksSummary.totalCopiesSold.toLocaleString()}
                     </span>
+                    <span className="text-xs text-sky-600 font-bold bg-sky-50 px-2 py-0.5 rounded-full">
+                      Catalog Total
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-2">Aggregated across Amazon, Flipkart & BookLeaf</p>
+                </div>
+
+                <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition-all relative overflow-hidden group">
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500" />
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Royalty Earned</span>
+                    <div className="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                      <TrendingUp className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-black text-slate-900 tracking-tight">
+                      ₹{booksSummary.totalRoyaltyEarned.toLocaleString()}
+                    </span>
+                    <span className="text-xs text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded-full">
+                      80% Net Profit
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-2">Author profit share after production & retail split</p>
+                </div>
+
+                <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition-all relative overflow-hidden group">
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 to-teal-500" />
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Royalty Disbursed</span>
+                    <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                      <CheckCircle className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-black text-emerald-700 tracking-tight">
+                      ₹{booksSummary.totalRoyaltyPaid.toLocaleString()}
+                    </span>
+                    <span className="text-xs text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">
+                      Paid to Bank
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-2">Transferred via NEFT/IMPS in quarterly cycles</p>
+                </div>
+
+                <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition-all relative overflow-hidden group">
+                  <div className={`absolute top-0 left-0 right-0 h-1 ${
+                    booksSummary.totalRoyaltyPending >= 1000 
+                      ? 'bg-gradient-to-r from-emerald-500 to-green-400' 
+                      : 'bg-gradient-to-r from-amber-400 to-orange-500'
+                  }`} />
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pending Payout</span>
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${
+                      booksSummary.totalRoyaltyPending >= 1000 
+                        ? 'bg-emerald-50 text-emerald-600' 
+                        : 'bg-amber-50 text-amber-600'
+                    }`}>
+                      <DollarSign className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <div className="flex items-baseline gap-2">
+                    <span className={`text-3xl font-black tracking-tight ${
+                      booksSummary.totalRoyaltyPending >= 1000 ? 'text-emerald-700' : 'text-amber-600'
+                    }`}>
+                      ₹{booksSummary.totalRoyaltyPending.toLocaleString()}
+                    </span>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                      booksSummary.totalRoyaltyPending >= 1000
+                        ? 'bg-emerald-100 text-emerald-800'
+                        : 'bg-amber-100 text-amber-800'
+                    }`}>
+                      {booksSummary.totalRoyaltyPending >= 1000 ? 'Ready for Batch' : 'Rolls Over'}
+                    </span>
+                  </div>
+
+                  {/* Visual Threshold Meter */}
+                  <div className="mt-3">
+                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                      <div 
+                        className={`h-full rounded-full transition-all duration-500 ${
+                          booksSummary.totalRoyaltyPending >= 1000 ? 'bg-emerald-500' : 'bg-amber-500'
+                        }`}
+                        style={{ width: `${Math.min(100, (booksSummary.totalRoyaltyPending / 1000) * 100)}%` }}
+                      />
+                    </div>
+                    <div className="flex items-center justify-between text-[10px] text-slate-400 mt-1">
+                      <span>Threshold: ₹1,000</span>
+                      <span>{booksSummary.totalRoyaltyPending >= 1000 ? '✓ Reached' : `₹${1000 - booksSummary.totalRoyaltyPending} to go`}</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -576,50 +647,71 @@ export default function AuthorDashboard() {
                 return (
                   <div
                     key={book.id}
-                    className="bg-white rounded-xl border border-slate-200 shadow-xs hover:shadow-md transition-shadow p-5 flex flex-col justify-between"
+                    className="bg-white rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition-all p-5 flex flex-col justify-between relative overflow-hidden group"
                   >
                     <div>
-                      {/* Top Badges */}
-                      <div className="flex items-center justify-between gap-2 mb-2.5">
+                      {/* Top Badges & ID */}
+                      <div className="flex items-center justify-between gap-2 mb-3">
                         <span
-                          className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${
+                          className={`text-xs font-bold px-3 py-1 rounded-full border ${
                             isInProduction
-                              ? 'bg-amber-50 text-amber-800 border-amber-200'
-                              : 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                              ? 'bg-amber-50 text-amber-800 border-amber-300'
+                              : 'bg-emerald-50 text-emerald-800 border-emerald-300'
                           }`}
                         >
                           {book.status}
                         </span>
 
-                        <span className="text-xs font-mono text-slate-400 font-medium">
+                        <span className="text-[11px] font-mono text-slate-400 font-semibold bg-slate-50 px-2 py-0.5 rounded border border-slate-200">
                           ID: {book.id}
                         </span>
                       </div>
 
-                      {/* Title & Genre */}
-                      <h3 className="text-base font-bold text-slate-900 mb-1">{book.title}</h3>
-                      <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 mb-4">
-                        <span>{book.genre || 'General'}</span>
-                        <span>•</span>
-                        <span>ISBN: {book.isbn || 'Pending Assignment'}</span>
-                        {book.publicationDate && (
-                          <>
+                      {/* Header with Miniature Book Cover Mockup */}
+                      <div className="flex items-start gap-3.5 mb-4">
+                        {/* Book Spine Mockup */}
+                        <div className={`w-12 h-16 rounded-md shadow-md shrink-0 flex flex-col justify-between p-1.5 text-white border-l-2 border-white/30 relative overflow-hidden ${
+                          book.genre?.toLowerCase().includes('thrill') 
+                            ? 'bg-gradient-to-br from-rose-900 to-slate-900'
+                            : book.genre?.toLowerCase().includes('poet')
+                            ? 'bg-gradient-to-br from-indigo-700 via-purple-800 to-slate-900'
+                            : 'bg-gradient-to-br from-emerald-800 via-teal-800 to-slate-900'
+                        }`}>
+                          <div className="text-[8px] font-mono opacity-60">BOOKLEAF</div>
+                          <div className="text-[9px] font-black line-clamp-2 leading-tight tracking-tight uppercase">
+                            {book.title}
+                          </div>
+                          <div className="text-[7px] opacity-75 font-serif italic truncate">{user.name}</div>
+                        </div>
+
+                        {/* Title & Metadata */}
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-base font-bold text-slate-900 mb-1 leading-snug group-hover:text-indigo-600 transition-colors">
+                            {book.title}
+                          </h3>
+                          <div className="flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
+                            <span className="font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded text-[10px]">
+                              {book.genre || 'General'}
+                            </span>
                             <span>•</span>
-                            <span>
-                              Pub: {new Date(book.publicationDate).toLocaleDateString('en-IN', {
+                            <span className="font-mono text-[11px]">ISBN: {book.isbn || 'Pending'}</span>
+                          </div>
+                          {book.publicationDate && (
+                            <div className="text-[11px] text-slate-400 mt-1">
+                              Published: {new Date(book.publicationDate).toLocaleDateString('en-IN', {
                                 month: 'short',
                                 day: 'numeric',
                                 year: 'numeric',
                               })}
-                            </span>
-                          </>
-                        )}
+                            </div>
+                          )}
+                        </div>
                       </div>
 
                       {/* Financial & Operational Breakdown */}
                       {isInProduction ? (
-                        <div className="bg-amber-50/70 border border-amber-200 rounded-lg p-3 text-xs text-amber-900 mb-4 space-y-1">
-                          <div className="font-semibold flex items-center gap-1.5">
+                        <div className="bg-amber-50/80 border border-amber-200/80 rounded-xl p-3.5 text-xs text-amber-950 mb-4 space-y-1.5">
+                          <div className="font-bold flex items-center gap-1.5 text-amber-900">
                             <Clock className="w-3.5 h-3.5 text-amber-600" />
                             Book Currently in Production
                           </div>
@@ -629,29 +721,29 @@ export default function AuthorDashboard() {
                           </p>
                         </div>
                       ) : (
-                        <div className="grid grid-cols-3 gap-2 bg-slate-50 rounded-lg p-3 border border-slate-100 text-xs mb-4">
+                        <div className="grid grid-cols-3 gap-2 bg-slate-50/80 rounded-xl p-3.5 border border-slate-200/80 text-xs mb-4">
                           <div>
-                            <span className="text-slate-400 block text-[11px]">MRP / Royalty</span>
-                            <span className="font-semibold text-slate-900">
-                              ₹{book.mrp} / ₹{book.authorRoyaltyPerCopy}
+                            <span className="text-slate-400 block text-[10px] font-semibold uppercase tracking-wider">MRP / Royalty</span>
+                            <span className="font-bold text-slate-900">
+                              ₹{book.mrp} / <span className="text-indigo-600">₹{book.authorRoyaltyPerCopy}</span>
                             </span>
                           </div>
                           <div>
-                            <span className="text-slate-400 block text-[11px]">Copies Sold</span>
-                            <span className="font-semibold text-slate-900">
+                            <span className="text-slate-400 block text-[10px] font-semibold uppercase tracking-wider">Copies Sold</span>
+                            <span className="font-bold text-slate-900">
                               {book.totalCopiesSold.toLocaleString()}
                             </span>
                           </div>
                           <div>
-                            <span className="text-slate-400 block text-[11px]">Earned</span>
-                            <span className="font-semibold text-slate-900">
+                            <span className="text-slate-400 block text-[10px] font-semibold uppercase tracking-wider">Net Earned</span>
+                            <span className="font-bold text-slate-900">
                               ₹{book.totalRoyaltyEarned.toLocaleString()}
                             </span>
                           </div>
-                          <div className="col-span-3 pt-2 border-t border-slate-200/60 flex items-center justify-between">
-                            <span className="text-slate-500">Paid: ₹{book.royaltyPaid.toLocaleString()}</span>
+                          <div className="col-span-3 pt-2.5 mt-1 border-t border-slate-200/80 flex items-center justify-between">
+                            <span className="text-slate-500 font-medium">Paid: ₹{book.royaltyPaid.toLocaleString()}</span>
                             <span className="font-bold text-slate-900">
-                              Pending: <span className="text-amber-600">₹{book.royaltyPending.toLocaleString()}</span>
+                              Pending Payout: <span className="text-emerald-700 font-black">₹{book.royaltyPending.toLocaleString()}</span>
                             </span>
                           </div>
                         </div>
@@ -659,7 +751,7 @@ export default function AuthorDashboard() {
 
                       {/* Threshold Edge Case Notice */}
                       {isBelowThreshold && (
-                        <div className="mb-4 bg-indigo-50 border border-indigo-200 rounded-lg p-2.5 text-xs text-indigo-900 flex items-start gap-2">
+                        <div className="mb-4 bg-indigo-50/90 border border-indigo-200 rounded-xl p-3 text-xs text-indigo-900 flex items-start gap-2.5">
                           <AlertCircle className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
                           <p className="text-[11px] leading-relaxed">
                             <strong>Royalty Threshold Note:</strong> Pending amount (₹{book.royaltyPending}) is below the ₹1,000 minimum payout threshold. It will roll over to the next quarter as per BookLeaf policy.
@@ -669,19 +761,33 @@ export default function AuthorDashboard() {
 
                       {/* Distribution Channels */}
                       {book.availableOn && book.availableOn.length > 0 && (
-                        <div className="mb-3">
-                          <span className="text-[11px] font-semibold text-slate-400 block mb-1">
-                            Available On:
+                        <div className="mb-4">
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+                            Active Distribution Channels:
                           </span>
                           <div className="flex flex-wrap gap-1.5">
-                            {book.availableOn.map((platform, pIdx) => (
-                              <span
-                                key={pIdx}
-                                className="text-[10px] font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200"
-                              >
-                                {platform}
-                              </span>
-                            ))}
+                            {book.availableOn.map((platform, pIdx) => {
+                              const isAmazon = platform.toLowerCase().includes('amazon');
+                              const isFlipkart = platform.toLowerCase().includes('flipkart');
+
+                              return (
+                                <span
+                                  key={pIdx}
+                                  className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border flex items-center gap-1 ${
+                                    isAmazon
+                                      ? 'bg-amber-50 text-amber-900 border-amber-200'
+                                      : isFlipkart
+                                      ? 'bg-sky-50 text-sky-900 border-sky-200'
+                                      : 'bg-emerald-50 text-emerald-900 border-emerald-200'
+                                  }`}
+                                >
+                                  <span className={`w-1.5 h-1.5 rounded-full ${
+                                    isAmazon ? 'bg-amber-500' : isFlipkart ? 'bg-sky-500' : 'bg-emerald-500'
+                                  }`} />
+                                  {platform}
+                                </span>
+                              );
+                            })}
                           </div>
                         </div>
                       )}
@@ -689,8 +795,8 @@ export default function AuthorDashboard() {
 
                     {/* Bottom Action */}
                     <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                      <span className="text-xs text-slate-400">
-                        Print: {book.printPartner || 'In-House'}
+                      <span className="text-xs text-slate-400 font-medium">
+                        Print: {book.printPartner || 'In-House BookLeaf'}
                       </span>
                       <button
                         onClick={() => {
@@ -698,7 +804,7 @@ export default function AuthorDashboard() {
                           setFormSubject(`Query regarding "${book.title}"`);
                           setActiveTab('submit');
                         }}
-                        className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 flex items-center gap-1 cursor-pointer"
+                        className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 cursor-pointer transition-colors"
                       >
                         Ask About This Book
                         <ChevronRight className="w-3.5 h-3.5" />
@@ -857,6 +963,55 @@ export default function AuthorDashboard() {
                 </div>
               </div>
             )}
+
+            {/* Quick 1-Click Scenario Helper Chips */}
+            <div className="mb-6 p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2.5">
+                ⚡ Quick Example Prompts (Click to Auto-Fill)
+              </span>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormSubject('Overdue Q3 royalty payout calculation');
+                    setFormDescription('My author portal shows over ₹3,000 pending royalty for last quarter, but it has not been deposited in my bank account yet. Please verify when this batch will be credited.');
+                  }}
+                  className="text-xs px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 transition-colors font-medium cursor-pointer"
+                >
+                  💰 Royalty Payout Delay
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormSubject('Damaged author copies — spine binding separated');
+                    setFormDescription('I received my batch of author copies yesterday and on 3 copies the glue at the spine separated and loose pages came out. Under BookLeaf Quality Guarantee, please arrange a free replacement reprint batch.');
+                  }}
+                  className="text-xs px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition-colors font-medium cursor-pointer"
+                >
+                  📦 Defective Print / Reprint
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormSubject('Amazon India shows Out of Stock / Currently Unavailable');
+                    setFormDescription('My readers reached out saying Amazon India is showing currently unavailable, while Flipkart is active. Could your distribution team trigger a catalog re-sync with distributor feeds?');
+                  }}
+                  className="text-xs px-3 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 transition-colors font-medium cursor-pointer"
+                >
+                  🛒 Amazon Stock Out of Sync
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormSubject('Typesetting milestone and interior layout proof review');
+                    setFormDescription('My book has been in typesetting for two weeks. When can I expect the interior layout proof PDF for final author review and approval?');
+                  }}
+                  className="text-xs px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 transition-colors font-medium cursor-pointer"
+                >
+                  ⏳ Typesetting Milestone
+                </button>
+              </div>
+            </div>
 
             <form onSubmit={handleSubmitTicket} className="space-y-4">
               {/* Book selector */}
