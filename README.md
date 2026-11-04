@@ -1,4 +1,20 @@
-# BookLeaf Publishing — Author Support & Communication Portal
+# BookLeaf Publishing — Technical Assessments
+
+> [!IMPORTANT]
+> ### 🌟 BOOKLEAF TECHNICAL ASSIGNMENT 2 (FINAL ASSIGNMENT) IS NOW COMPLETE!
+> **[👉 Click here to navigate directly to Assignment 2: Author Royalty Dashboard & Automated Notification System](./bookleaf-assignment-2/README.md)**
+>
+> Built with **Bubble.io**, **n8n Orchestration**, **Deterministic AI Policy Engine**, and **Server-Side Privacy Rules**.
+> - **Deliverable 1 (Bubble App Blueprint & Schema)**: [`bookleaf-assignment-2/BUBBLE_DATABASE_SCHEMA.md`](./bookleaf-assignment-2/BUBBLE_DATABASE_SCHEMA.md) & [`BUBBLE_IMPLEMENTATION_GUIDE.md`](./bookleaf-assignment-2/BUBBLE_IMPLEMENTATION_GUIDE.md)
+> - **Deliverable 2 (n8n Workflow Export)**: [`bookleaf-assignment-2/n8n/bookleaf-royalty-summary.json`](./bookleaf-assignment-2/n8n/bookleaf-royalty-summary.json)
+> - **Deliverable 3 (Full Architectural Documentation)**: [`bookleaf-assignment-2/README.md`](./bookleaf-assignment-2/README.md)
+> - **Deliverable 4 (3–5 Min Walkthrough Script)**: [`bookleaf-assignment-2/docs/screen-recording-script.md`](./bookleaf-assignment-2/docs/screen-recording-script.md)
+> - **Data Seeding Package**: Ready-to-import CSVs in [`bookleaf-assignment-2/data/`](./bookleaf-assignment-2/data/)
+> - **Verification Suite**: 100% Passing automated tests in [`bookleaf-assignment-2/tests/test-suite.js`](./bookleaf-assignment-2/tests/test-suite.js)
+
+---
+
+# Assignment 1: Author Support & Operations Communication Portal
 
 An intelligent, real-time Author Support and Operations Portal built for **BookLeaf Publishing** to manage author communications at publishing scale (processing 1,200+ monthly books across 22,000+ titles).
 
