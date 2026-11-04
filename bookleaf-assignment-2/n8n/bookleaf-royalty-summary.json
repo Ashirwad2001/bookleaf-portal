@@ -1,0 +1,371 @@
+{
+  "name": "BookLeaf - Author Royalty Summary & Notification Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "bookleaf-royalty-summary",
+        "responseMode": "onReceived",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "id": "node-webhook-trigger",
+      "name": "Bubble Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        220,
+        300
+      ],
+      "webhookId": "bookleaf-royalty-summary"
+    },
+    {
+      "parameters": {
+        "jsCode": "const headers = $input.item.json.headers || {};\nconst body = $input.item.json.body || {};\n\nconst expectedSecret = $env.WEBHOOK_SECRET || \"bookleaf_secure_webhook_secret_2026\";\nconst providedSecret = headers[\"x-webhook-secret\"] || headers[\"X-Webhook-Secret\"];\n\nif (!providedSecret || providedSecret !== expectedSecret) {\n  return [{\n    json: {\n      is_valid: false,\n      status_code: 401,\n      error: \"Unauthorized: Invalid or missing X-Webhook-Secret header\",\n      request_id: body.request_id || \"UNKNOWN\"\n    }\n  }];\n}\n\nif (!body.request_id || !body.author_id) {\n  return [{\n    json: {\n      is_valid: false,\n      status_code: 400,\n      error: \"Bad Request: Missing request_id or author_id in payload\",\n      request_id: body.request_id || \"UNKNOWN\"\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    is_valid: true,\n    request_id: body.request_id,\n    author_id: body.author_id,\n    author_name: body.author_name || \"Author\",\n    author_email: body.author_email || \"\",\n    triggered_by: body.triggered_by || \"admin@bookleaf.com\",\n    triggered_at: body.triggered_at || new Date().toISOString()\n  }\n}];"
+      },
+      "id": "node-validate-auth",
+      "name": "Validate Auth & Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.is_valid }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "node-if-valid",
+      "name": "Is Authorized & Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        660,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ ($env.BUBBLE_BASE_URL || \"https://bookleaf-royalty.bubbleapps.io/version-test\") + \"/api/1.1/obj/author?constraints=\" + encodeURIComponent(JSON.stringify([{\"key\":\"author_id\",\"constraint_type\":\"equals\",\"value\":$json.author_id}])) }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ \"Bearer \" + ($env.BUBBLE_API_TOKEN || \"mock_bubble_token\") }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "node-fetch-author",
+      "name": "Fetch Author from Bubble",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ ($env.BUBBLE_BASE_URL || \"https://bookleaf-royalty.bubbleapps.io/version-test\") + \"/api/1.1/obj/book?constraints=\" + encodeURIComponent(JSON.stringify([{\"key\":\"author_id_str\",\"constraint_type\":\"equals\",\"value\":$(\"Validate Auth & Payload\").item.json.author_id}])) }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ \"Bearer \" + ($env.BUBBLE_API_TOKEN || \"mock_bubble_token\") }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "node-fetch-books",
+      "name": "Fetch Books from Bubble",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1120,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const authData = $(\"Validate Auth & Payload\").item.json;\nconst authorRaw = $(\"Fetch Author from Bubble\").item.json;\nconst booksRaw = $input.item.json;\n\n// Handle both live Bubble API response structure and mock/local response\nconst authorResult = (authorRaw.response && authorRaw.response.results && authorRaw.response.results[0]) || authorRaw;\nconst booksList = (booksRaw.response && booksRaw.response.results) || (Array.isArray(booksRaw) ? booksRaw : []);\n\nlet totalSold = 0;\nlet totalEarned = 0;\nlet totalPaid = 0;\nlet totalPending = 0;\n\nlet publishedBooks = [];\nlet productionBooks = [];\n\nbooksList.forEach(book => {\n  const sold = Number(book.total_copies_sold || 0);\n  const earned = Number(book.total_royalty_earned || 0);\n  const paid = Number(book.royalty_paid || 0);\n  const pending = Number(book.royalty_pending || 0);\n\n  totalSold += sold;\n  totalEarned += earned;\n  totalPaid += paid;\n  totalPending += pending;\n\n  if (book.status && book.status.toLowerCase().includes(\"production\")) {\n    productionBooks.push({\n      title: book.title,\n      status: book.status,\n      milestone: book.status.replace(\"In Production - \", \"\")\n    });\n  } else {\n    publishedBooks.push({\n      title: book.title,\n      isbn: book.isbn || \"N/A\",\n      genre: book.genre || \"General\",\n      copies_sold: sold,\n      royalty_earned: earned,\n      royalty_paid: paid,\n      royalty_pending: pending,\n      last_payout: book.last_royalty_payout_date || \"None recorded yet\",\n      platforms: book.available_on_raw || \"Amazon India, BookLeaf Store\"\n    });\n  }\n});\n\n// Determine Status Badge\nlet statusCategory = \"YELLOW\";\nif (totalPending === 0) {\n  statusCategory = \"GREEN\";\n} else {\n  const now = new Date();\n  const ninetyDaysAgo = new Date(now.getTime() - (90 * 24 * 60 * 60 * 1000));\n  const hasOverdueBook = publishedBooks.some(b => {\n    if (b.royalty_pending > 0 && b.last_payout !== \"None recorded yet\") {\n      return new Date(b.last_payout) < ninetyDaysAgo;\n    }\n    return false;\n  });\n  if (hasOverdueBook) {\n    statusCategory = \"RED\";\n  }\n}\n\nconst isSubThreshold = totalPending > 0 && totalPending < 1000;\n\n// Build text block for LLM prompt\nlet booksFormatted = \"PUBLISHED TITLES:\\n\";\nif (publishedBooks.length === 0) {\n  booksFormatted += \"None. All books currently in production.\\n\";\n} else {\n  publishedBooks.forEach((b, i) => {\n    booksFormatted += `${i+1}. \"${b.title}\" | Copies Sold: ${b.copies_sold} | Earned: ₹${b.royalty_earned} | Paid: ₹${b.royalty_paid} | Pending: ₹${b.royalty_pending} | Last Payout: ${b.last_payout}\\n`;\n  });\n}\n\nif (productionBooks.length > 0) {\n  booksFormatted += \"\\nTITLES IN PRODUCTION:\\n\";\n  productionBooks.forEach((b, i) => {\n    booksFormatted += `${i+1}. \"${b.title}\" (Current Stage: ${b.status}) - Royalties will begin tracking immediately upon live release.\\n`;\n  });\n}\n\nlet policyInstructions = \"- Standard 80/20 royalty split applies.\\n- Payouts occur quarterly within 45 days after quarter end via bank transfer.\\n\";\nif (isSubThreshold) {\n  policyInstructions += `- NOTE: Total pending amount of ₹${totalPending} is below the ₹1,000 threshold. It will roll over intact to next quarter.\\n`;\n} else if (totalPending === 0) {\n  policyInstructions += \"- NOTE: All royalties have been disbursed (₹0 pending). Acknowledge this with appreciation.\\n\";\n} else {\n  policyInstructions += `- NOTE: Pending amount of ₹${totalPending} exceeds ₹1,000 threshold and qualifies for the upcoming quarterly disbursement.\\n`;\n}\n\nreturn [{\n  json: {\n    request_id: authData.request_id,\n    author_id: authData.author_id,\n    author_name: authorResult.name || authData.author_name,\n    author_email: authorResult.email || authData.author_email,\n    author_city: authorResult.city || \"India\",\n    totals: {\n      total_copies_sold: totalSold,\n      total_royalty_earned: totalEarned,\n      total_royalty_paid: totalPaid,\n      total_royalty_pending: totalPending\n    },\n    status_category: statusCategory,\n    is_sub_threshold: isSubThreshold,\n    books_formatted_list: booksFormatted,\n    policy_instructions: policyInstructions\n  }\n}];"
+      },
+      "id": "node-deterministic-calc",
+      "name": "Deterministic Aggregator & Policies",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ \"Bearer \" + ($env.OPENAI_API_KEY || \"mock_openai_key\") }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"gpt-4o-mini\",\n  \"response_format\": { \"type\": \"json_object\" },\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are BookLeaf Publishing Senior Author Relations Specialist. Generate an official personalized royalty summary email based strictly on the verified numbers provided. Core policies: 80/20 royalty split (80% net profit to author), quarterly disbursement within 45 days after quarter end via bank transfer, minimum threshold ₹1,000 (sub-₹1,000 rolls over). NEVER invent numbers, payout dates, or transactions. Output valid JSON with keys: email_subject, email_body, summary: { total_earned, total_paid, total_pending, payout_status }.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Author: \" + $json.author_name + \" (\" + $json.author_city + \")\\nTotal Earned: ₹\" + $json.totals.total_royalty_earned + \"\\nTotal Paid: ₹\" + $json.totals.total_royalty_paid + \"\\nTotal Pending: ₹\" + $json.totals.total_royalty_pending + \"\\nStatus: \" + $json.status_category + \"\\n\\n\" + $json.books_formatted_list + \"\\nPolicy context:\\n\" + $json.policy_instructions\n    }\n  ]\n}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "node-call-llm",
+      "name": "Call AI API (LLM)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1600,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const calc = $(\"Deterministic Aggregator & Policies\").item.json;\nconst llmRaw = $input.item.json;\n\ntry {\n  let responseObj = null;\n  if (llmRaw.choices && llmRaw.choices[0] && llmRaw.choices[0].message) {\n    const content = llmRaw.choices[0].message.content;\n    responseObj = JSON.parse(content);\n  } else if (llmRaw.email_body) {\n    responseObj = llmRaw;\n  } else {\n    throw new Error(\"LLM response missing choices or content structure\");\n  }\n\n  if (!responseObj.email_subject || !responseObj.email_body) {\n    throw new Error(\"AI response missing email_subject or email_body\");\n  }\n\n  return [{\n    json: {\n      is_success: true,\n      request_id: calc.request_id,\n      author_id: calc.author_id,\n      email_subject: responseObj.email_subject,\n      email_body: responseObj.email_body,\n      total_earned: calc.totals.total_royalty_earned,\n      total_paid: calc.totals.total_royalty_paid,\n      total_pending: calc.totals.total_royalty_pending\n    }\n  }];\n} catch (err) {\n  return [{\n    json: {\n      is_success: false,\n      request_id: calc.request_id,\n      author_id: calc.author_id,\n      error_message: \"Failed to parse or validate AI output: \" + err.message\n    }\n  }];\n}"
+      },
+      "id": "node-validate-ai",
+      "name": "Validate AI Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1840,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.is_success }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "node-if-success",
+      "name": "Is AI Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2060,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ ($env.BUBBLE_BASE_URL || \"https://bookleaf-royalty.bubbleapps.io/version-test\") + \"/api/1.1/wf/n8n_callback_success\" }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"request_id\": $json.request_id,\n  \"auth_secret\": $env.BUBBLE_CALLBACK_SECRET || \"bookleaf_secure_webhook_secret_2026\",\n  \"email_subject\": $json.email_subject,\n  \"email_body\": $json.email_body,\n  \"total_earned\": $json.total_earned,\n  \"total_paid\": $json.total_paid,\n  \"total_pending\": $json.total_pending\n}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "node-callback-success",
+      "name": "Bubble Callback - Success",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2320,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ ($env.BUBBLE_BASE_URL || \"https://bookleaf-royalty.bubbleapps.io/version-test\") + \"/api/1.1/wf/n8n_callback_failure\" }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"request_id\": $json.request_id,\n  \"auth_secret\": $env.BUBBLE_CALLBACK_SECRET || \"bookleaf_secure_webhook_secret_2026\",\n  \"error_message\": $json.error_message || \"Unknown automation error\"\n}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "node-callback-failure",
+      "name": "Bubble Callback - Failure",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2320,
+        320
+      ]
+    }
+  ],
+  "connections": {
+    "Bubble Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Validate Auth & Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Auth & Payload": {
+      "main": [
+        [
+          {
+            "node": "Is Authorized & Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Authorized & Valid?": {
+      "main": [
+        [
+          {
+            "node": "Fetch Author from Bubble",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Bubble Callback - Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Author from Bubble": {
+      "main": [
+        [
+          {
+            "node": "Fetch Books from Bubble",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Books from Bubble": {
+      "main": [
+        [
+          {
+            "node": "Deterministic Aggregator & Policies",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deterministic Aggregator & Policies": {
+      "main": [
+        [
+          {
+            "node": "Call AI API (LLM)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call AI API (LLM)": {
+      "main": [
+        [
+          {
+            "node": "Validate AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate AI Response": {
+      "main": [
+        [
+          {
+            "node": "Is AI Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is AI Valid?": {
+      "main": [
+        [
+          {
+            "node": "Bubble Callback - Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Bubble Callback - Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

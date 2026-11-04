@@ -1,0 +1,12 @@
+email,role,name,author_id
+"admin@bookleaf.com","ADMIN","BookLeaf Ops Lead",""
+"priya.sharma@email.com","AUTHOR","Priya Sharma","AUTH001"
+"rohit.kapoor@email.com","AUTHOR","Rohit Kapoor","AUTH002"
+"ananya.reddy@email.com","AUTHOR","Ananya Reddy","AUTH003"
+"vikram.joshi@email.com","AUTHOR","Vikram Joshi","AUTH004"
+"meera.nair@email.com","AUTHOR","Meera Nair","AUTH005"
+"arjun.malhotra@email.com","AUTHOR","Arjun Malhotra","AUTH006"
+"sneha.kulkarni@email.com","AUTHOR","Sneha Kulkarni","AUTH007"
+"farhan.sheikh@email.com","AUTHOR","Farhan Sheikh","AUTH008"
+"kavita.deshmukh@email.com","AUTHOR","Kavita Deshmukh","AUTH009"
+"diya.chatterjee@email.com","AUTHOR","Diya Chatterjee","AUTH010"

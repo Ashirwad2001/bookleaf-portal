@@ -1,0 +1,121 @@
+{
+  "test_cases": [
+    {
+      "scenario": "Standard Author with Pending Royalties > ₹1,000",
+      "author_id": "AUTH001",
+      "author_name": "Priya Sharma",
+      "headers": {
+        "Content-Type": "application/json",
+        "X-Webhook-Secret": "bookleaf_secure_webhook_secret_2026"
+      },
+      "payload": {
+        "request_id": "REQ-AUTH001-TEST",
+        "author_id": "AUTH001",
+        "author_name": "Priya Sharma",
+        "author_email": "priya.sharma@email.com",
+        "triggered_by": "admin@bookleaf.com",
+        "triggered_at": "2026-11-03T08:30:00.000Z"
+      }
+    },
+    {
+      "scenario": "Catalog Bestseller with High Volume",
+      "author_id": "AUTH002",
+      "author_name": "Rohit Kapoor",
+      "headers": {
+        "Content-Type": "application/json",
+        "X-Webhook-Secret": "bookleaf_secure_webhook_secret_2026"
+      },
+      "payload": {
+        "request_id": "REQ-AUTH002-TEST",
+        "author_id": "AUTH002",
+        "author_name": "Rohit Kapoor",
+        "author_email": "rohit.kapoor@email.com",
+        "triggered_by": "admin@bookleaf.com",
+        "triggered_at": "2026-11-03T08:30:00.000Z"
+      }
+    },
+    {
+      "scenario": "Inaugural Payout (Null Last Payout Date, Earned > ₹1,000)",
+      "author_id": "AUTH003",
+      "author_name": "Ananya Reddy",
+      "headers": {
+        "Content-Type": "application/json",
+        "X-Webhook-Secret": "bookleaf_secure_webhook_secret_2026"
+      },
+      "payload": {
+        "request_id": "REQ-AUTH003-TEST",
+        "author_id": "AUTH003",
+        "author_name": "Ananya Reddy",
+        "author_email": "ananya.reddy@email.com",
+        "triggered_by": "admin@bookleaf.com",
+        "triggered_at": "2026-11-03T08:30:00.000Z"
+      }
+    },
+    {
+      "scenario": "Author with Book in Production (Cover Design)",
+      "author_id": "AUTH007",
+      "author_name": "Sneha Kulkarni",
+      "headers": {
+        "Content-Type": "application/json",
+        "X-Webhook-Secret": "bookleaf_secure_webhook_secret_2026"
+      },
+      "payload": {
+        "request_id": "REQ-AUTH007-TEST",
+        "author_id": "AUTH007",
+        "author_name": "Sneha Kulkarni",
+        "author_email": "sneha.kulkarni@email.com",
+        "triggered_by": "admin@bookleaf.com",
+        "triggered_at": "2026-11-03T08:30:00.000Z"
+      }
+    },
+    {
+      "scenario": "Fully Settled Royalties (₹0 Pending - GREEN status)",
+      "author_id": "AUTH008",
+      "author_name": "Farhan Sheikh",
+      "headers": {
+        "Content-Type": "application/json",
+        "X-Webhook-Secret": "bookleaf_secure_webhook_secret_2026"
+      },
+      "payload": {
+        "request_id": "REQ-AUTH008-TEST",
+        "author_id": "AUTH008",
+        "author_name": "Farhan Sheikh",
+        "author_email": "farhan.sheikh@email.com",
+        "triggered_by": "admin@bookleaf.com",
+        "triggered_at": "2026-11-03T08:30:00.000Z"
+      }
+    },
+    {
+      "scenario": "Sub-₹1,000 Threshold Rollover Policy & Production Book",
+      "author_id": "AUTH009",
+      "author_name": "Kavita Deshmukh",
+      "headers": {
+        "Content-Type": "application/json",
+        "X-Webhook-Secret": "bookleaf_secure_webhook_secret_2026"
+      },
+      "payload": {
+        "request_id": "REQ-AUTH009-TEST",
+        "author_id": "AUTH009",
+        "author_name": "Kavita Deshmukh",
+        "author_email": "kavita.deshmukh@email.com",
+        "triggered_by": "admin@bookleaf.com",
+        "triggered_at": "2026-11-03T08:30:00.000Z"
+      }
+    },
+    {
+      "scenario": "Security Failure Test: Invalid Webhook Secret",
+      "author_id": "AUTH001",
+      "headers": {
+        "Content-Type": "application/json",
+        "X-Webhook-Secret": "invalid_secret_key"
+      },
+      "payload": {
+        "request_id": "REQ-UNAUTH-001",
+        "author_id": "AUTH001",
+        "triggered_by": "unknown_actor",
+        "triggered_at": "2026-11-03T08:30:00.000Z"
+      }
+    }
+  ]
+}
+

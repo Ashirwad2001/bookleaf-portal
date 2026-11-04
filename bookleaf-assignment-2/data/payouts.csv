@@ -1,0 +1,13 @@
+payout_id,author_id,book_id,book_title,amount,payout_date,status,note
+"PAY001","AUTH001","BK001","Whispers of the Ganges","8400","2025-10-15","PAID","Quarterly Disbursement"
+"PAY002","AUTH001","BK002","The Saffron Diaries","7938","2025-12-01","PAID","Quarterly Disbursement"
+"PAY003","AUTH002","BK003","Code & Karma","21000","2025-09-01","PAID","Quarterly Disbursement"
+"PAY004","AUTH002","BK004","Startup Sutra","50000","2025-11-15","PAID","Quarterly Disbursement"
+"PAY005","AUTH004","BK006","Debugging Life","10000","2025-08-20","PAID","Quarterly Disbursement"
+"PAY006","AUTH004","BK007","The Last Monsoon","1845","2025-12-01","PAID","Quarterly Disbursement"
+"PAY007","AUTH005","BK008","Cardamom & Chaos","14240","2025-12-01","PAID","Quarterly Disbursement"
+"PAY008","AUTH005","BK009","Letters from Lakshadweep","8000","2025-10-15","PAID","Quarterly Disbursement"
+"PAY009","AUTH007","BK011","The Algorithm of Love","35000","2025-11-15","PAID","Quarterly Disbursement"
+"PAY010","AUTH007","BK012","Ctrl+Alt+Delete My Ex","18000","2025-10-15","PAID","Quarterly Disbursement"
+"PAY011","AUTH008","BK014","Ghazal of the Forgotten","3120","2025-12-01","PAID","Quarterly Disbursement"
+"PAY012","AUTH010","BK017","Durga’s Daughters","25000","2025-11-15","PAID","Quarterly Disbursement"
