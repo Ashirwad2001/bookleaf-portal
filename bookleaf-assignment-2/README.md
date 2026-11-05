@@ -156,7 +156,8 @@ For exact configuration clicks, see [`PRIVACY_RULES.md`](./PRIVACY_RULES.md).
 
 ### 1. Webhook Trigger (Bubble $\rightarrow$ n8n)
 - **Method**: `POST`
-- **URL**: `https://[N8N_HOST]/webhook/bookleaf-royalty-summary`
+- **Live Application URL**: https://bookleaf-royalty-ashirwad.bubbleapps.io/version-test/
+- **Bubble Editor URL**: https://bubble.io/page?id=bookleaf-royalty-ashirwad
 - **Headers**: `X-Webhook-Secret: bookleaf_secure_webhook_secret_2026`
 - **Payload**:
   ```json
